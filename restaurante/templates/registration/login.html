@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div class="card" style="max-width: 420px; margin: 2rem auto;">
+    <h2>🔐 Acesso ao Sistema</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom: 0.8rem;">
+            <label for="id_username">Usuário</label><br>
+            {{ form.username }}
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="id_password">Senha</label><br>
+            {{ form.password }}
+        </div>
+        {% if form.errors %}
+            <p style="color: #b02a37; margin-bottom: 0.8rem;">Usuário ou senha inválidos.</p>
+        {% endif %}
+        <button type="submit" class="botao">Entrar</button>
+    </form>
+</div>
+{% endblock %}

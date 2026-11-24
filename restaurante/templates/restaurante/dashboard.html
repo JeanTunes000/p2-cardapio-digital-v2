@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block conteudo %}
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <h2>📊 Dashboard — {{ request.org.nome }}</h2>
+    {% if pode_exportar %}
+        <a class="botao" href="{% url 'exportar_comandas_csv' %}?inicio={{ request.GET.inicio|urlencode }}&fim={{ request.GET.fim|urlencode }}">
+            📥 Exportar CSV
+        </a>
+    {% endif %}
+</div>
+
+<form method="get" class="filtro-form">
+    <div>
+        <label for="id_inicio">Início:</label>
+        {{ form.inicio }}
+    </div>
+    <div>
+        <label for="id_fim">Fim:</label>
+        {{ form.fim }}
+    </div>
+    <button type="submit" class="botao">Filtrar</button>
+    <a href="{% url 'dashboard' %}" class="botao botao-secundario">Limpar</a>
+</form>
+
+<div class="cards">
+    <div class="card">
+        <small>Total de Comandas</small>
+        <div class="kpi-valor">{{ kpis.total_comandas }}</div>
+    </div>
+    <div class="card">
+        <small>Comandas Abertas</small>
+        <div class="kpi-valor">{{ kpis.abertas }}</div>
+    </div>
+    <div class="card">
+        <small>Comandas Fechadas</small>
+        <div class="kpi-valor">{{ kpis.fechadas }}</div>
+    </div>
+    <div class="card">
+        <small>Faturamento Estimado</small>
+        <div class="kpi-valor">R$ {{ kpis.faturamento_total|floatformat:2 }}</div>
+    </div>
+</div>
+
+<div class="grid-dashboard">
+    {% if mostra_series %}
+    <div class="card">
+        <h3>📈 Comandas por Mês</h3>
+        {% if por_mes %}
+            <canvas id="grafico-mes"></canvas>
+        {% else %}
+            <p>Sem dados de comandas no período selecionado.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <h3>🏆 Pratos Mais Pedidos (Top 5)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prato</th>
+                    <th>Qtd. Pedida</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ranking_pratos %}
+                    <tr>
+                        <td>{{ item.prato__nome }}</td>
+                        <td><strong>{{ item.total_qtd }}</strong></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">Sem pedidos registrados no período.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>🥧 Distribuição por Status</h3>
+        {% if distribuicao_status %}
+            <canvas id="grafico-status"></canvas>
+        {% else %}
+            <p>Nenhuma comanda encontrada no período.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3>📋 Pratos por Categoria</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in distribuicao_categorias %}
+                    <tr>
+                        <td>{{ cat.categoria }}</td>
+                        <td><strong>{{ cat.total }}</strong></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">Nenhum prato cadastrado nesta organização.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ por_mes|json_script:"dados-mes" }}
+{{ distribuicao_status|json_script:"dados-status" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'restaurante/js/dashboard.js' %}"></script>
+{% endblock %}

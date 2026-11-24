@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<h2>🍔 Combos — {{ request.org.nome }}</h2>
+
+<div class="cards">
+    {% for combo in combos %}
+        <div class="card">
+            <h3>{{ combo.nome }}</h3>
+            <p>{{ combo.descricao }}</p>
+            <p class="preco">R$ {{ combo.preco }}</p>
+            <p>{% if combo.disponivel %}🟢 Disponível{% else %}🔴 Indisponível{% endif %}</p>
+        </div>
+    {% empty %}
+        <p>Nenhum combo cadastrado para esta organização.</p>
+    {% endfor %}
+</div>
+{% endblock %}

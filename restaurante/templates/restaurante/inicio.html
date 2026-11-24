@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div class="card">
+    <h2>Bem-vindo, {{ perfil.usuario.username }}!</h2>
+    <p><strong>Organização:</strong> {{ perfil.organizacao.nome }}</p>
+    <p><strong>Papel de acesso:</strong> {{ perfil.get_papel_display }}</p>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <h3>📊 Dashboard Gerencial</h3>
+        <p>Acompanhe KPIs, ranking de pratos, evolução mensal e exportação CSV.</p>
+        <a class="botao" href="{% url 'dashboard' %}" style="margin-top:0.6rem;">Abrir Dashboard</a>
+    </div>
+    <div class="card">
+        <h3>🪑 Controle de Mesas</h3>
+        <p>Abra comandas, adicione pratos/combos e feche contas da sua organização.</p>
+        <a class="botao" href="{% url 'lista_mesas' %}" style="margin-top:0.6rem;">Ver Mesas</a>
+    </div>
+    <div class="card">
+        <h3>🍽️ Cardápio</h3>
+        <p>Consulte pratos e combos disponíveis para atendimento.</p>
+        <a class="botao" href="{% url 'lista_pratos' %}" style="margin-top:0.6rem;">Ver Pratos</a>
+    </div>
+</div>
+{% endblock %}

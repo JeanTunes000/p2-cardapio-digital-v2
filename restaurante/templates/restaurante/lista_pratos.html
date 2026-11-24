@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<h2>🍽️ Pratos — {{ request.org.nome }}</h2>
+
+<form method="get" class="filtro-form">
+    <div>
+        <label for="q">Buscar por nome</label>
+        <input type="text" id="q" name="q" value="{{ request.GET.q }}" placeholder="Ex.: Filé, Suco...">
+    </div>
+    <div>
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria">
+            <option value="">Todas</option>
+            {% for valor, rotulo in categorias %}
+                <option value="{{ valor }}" {% if request.GET.categoria == valor %}selected{% endif %}>{{ rotulo }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="botao">Filtrar</button>
+    <a href="{% url 'lista_pratos' %}" class="botao botao-secundario">Limpar</a>
+</form>
+
+<div class="cards">
+    {% for prato in pratos %}
+        <div class="card">
+            <small>{{ prato.get_categoria_display }}</small>
+            <h3>{{ prato.nome }}</h3>
+            <p>{{ prato.descricao }}</p>
+            <p class="preco">R$ {{ prato.preco }}</p>
+            <p>{% if prato.disponivel %}🟢 Disponível{% else %}🔴 Indisponível{% endif %}</p>
+        </div>
+    {% empty %}
+        <p>Nenhum prato encontrado.</p>
+    {% endfor %}
+</div>
+{% endblock %}

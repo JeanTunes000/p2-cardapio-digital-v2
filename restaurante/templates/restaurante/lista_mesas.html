@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<h2>🪑 Mesas — {{ request.org.nome }}</h2>
+
+<div class="cards">
+    {% for mesa in mesas %}
+        <div class="card">
+            <h3>Mesa {{ mesa.numero }}</h3>
+            <p>
+                {% if mesa.status == 'LIVRE' %}
+                    🟢 Livre
+                {% else %}
+                    🔴 Ocupada
+                {% endif %}
+            </p>
+            <a class="botao" href="{% url 'abrir_comanda' mesa.id %}" style="margin-top: 0.6rem;">
+                Abrir / Ver Comanda
+            </a>
+        </div>
+    {% empty %}
+        <p>Nenhuma mesa cadastrada nesta organização.</p>
+    {% endfor %}
+</div>
+{% endblock %}

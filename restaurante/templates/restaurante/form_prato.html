@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div class="card" style="max-width: 520px;">
+    <h2>➕ Cadastrar Prato</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="botao" style="margin-top: 0.8rem;">Salvar Prato</button>
+    </form>
+</div>
+{% endblock %}
